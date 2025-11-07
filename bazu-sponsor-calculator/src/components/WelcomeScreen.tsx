@@ -164,7 +164,7 @@ export const WelcomeScreen = ({ onContinue, onSkipToBuilder }: WelcomeScreenProp
           onClick={onSkipToBuilder}
           className="w-full mt-4 py-3 px-6 glass-effect rounded-2xl font-semibold text-sm text-gray-400 hover:text-white hover:border-white/30 transition-all duration-300"
         >
-          ✨ Saját csomag összeállítása (alap árakkal)
+          ✨ Saját csomag összeállítása
         </motion.button>
       </motion.div>
     </div>

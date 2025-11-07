@@ -4,9 +4,11 @@ import { GoalsScreen } from './components/GoalsScreen';
 import { PackagesScreen } from './components/PackagesScreen';
 import { BuilderScreen } from './components/BuilderScreen';
 import { SummaryScreen } from './components/SummaryScreen';
-import type { SponsorshipGoal, Package } from './types';
+import { FeatureSelectionScreen } from './components/FeatureSelectionScreen';
+import { QuoteScreen } from './components/QuoteScreen';
+import type { SponsorshipGoal, Package, PackageFeature } from './types';
 
-type Step = 'welcome' | 'goals' | 'packages' | 'builder' | 'summary';
+type Step = 'welcome' | 'goals' | 'packages' | 'builder' | 'summary' | 'feature-selection' | 'quote';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<Step>('welcome');
@@ -14,6 +16,7 @@ function App() {
   const [, setSelectedGoals] = useState<SponsorshipGoal | null>(null);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
   const [finalPackage, setFinalPackage] = useState<Package | null>(null);
+  const [customSelectedFeatures, setCustomSelectedFeatures] = useState<PackageFeature[]>([]);
 
   const handleBudgetSelected = (budget: number) => {
     setSelectedBudget(budget);
@@ -21,22 +24,8 @@ function App() {
   };
 
   const handleSkipToBuilder = () => {
-    // Skip to builder with base pricing (500K budget = 1.0 multiplier)
-    const baseBudget = 500000;
-    setSelectedBudget(baseBudget);
-
-    // Create a minimal custom package at base prices
-    const customPackage: Package = {
-      id: 'custom',
-      name: 'Egyedi csomag',
-      price: 0,
-      description: 'Saját összeállítású csomag alap árakon',
-      features: [],
-      totalReach: 0,
-    };
-
-    setSelectedPackage(customPackage);
-    setCurrentStep('builder');
+    // Skip to feature selection (no budget, no prices shown)
+    setCurrentStep('feature-selection');
   };
 
   const handleGoalsSelected = (goals: SponsorshipGoal) => {
@@ -60,6 +49,16 @@ function App() {
     setSelectedGoals(null);
     setSelectedPackage(null);
     setFinalPackage(null);
+    setCustomSelectedFeatures([]);
+  };
+
+  const handleFeaturesSelected = (features: PackageFeature[]) => {
+    setCustomSelectedFeatures(features);
+    setCurrentStep('quote');
+  };
+
+  const handleBackToFeatureSelection = () => {
+    setCurrentStep('feature-selection');
   };
 
   return (
@@ -101,6 +100,21 @@ function App() {
           finalPackage={finalPackage}
           budget={selectedBudget}
           onStartOver={handleStartOver}
+        />
+      )}
+
+      {currentStep === 'feature-selection' && (
+        <FeatureSelectionScreen
+          onContinue={handleFeaturesSelected}
+          onBack={() => setCurrentStep('welcome')}
+        />
+      )}
+
+      {currentStep === 'quote' && customSelectedFeatures.length > 0 && (
+        <QuoteScreen
+          selectedFeatures={customSelectedFeatures}
+          onStartOver={handleStartOver}
+          onBack={handleBackToFeatureSelection}
         />
       )}
     </div>
