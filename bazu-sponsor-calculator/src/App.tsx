@@ -3,6 +3,7 @@ import { WelcomeScreen } from './components/WelcomeScreen';
 import { GoalsScreen } from './components/GoalsScreen';
 import { PackagesScreen } from './components/PackagesScreen';
 import { BuilderScreen } from './components/BuilderScreen';
+import { SummaryScreen } from './components/SummaryScreen';
 import type { SponsorshipGoal, Package } from './types';
 
 type Step = 'welcome' | 'goals' | 'packages' | 'builder' | 'summary';
@@ -32,7 +33,14 @@ function App() {
   const handlePackageCustomized = (customPkg: Package) => {
     setFinalPackage(customPkg);
     setCurrentStep('summary');
-    console.log('Final package:', customPkg);
+  };
+
+  const handleStartOver = () => {
+    setCurrentStep('welcome');
+    setSelectedBudget(0);
+    setSelectedGoals(null);
+    setSelectedPackage(null);
+    setFinalPackage(null);
   };
 
   return (
@@ -66,16 +74,12 @@ function App() {
         />
       )}
 
-      {/* TODO: Add summary screen */}
       {currentStep === 'summary' && finalPackage && (
-        <div className="min-h-screen flex items-center justify-center">
-          <div className="text-center">
-            <h2 className="text-4xl font-bold mb-4">Összegzés</h2>
-            <p className="text-gray-400">Végleges csomag: {finalPackage.name}</p>
-            <p className="text-gray-400">Ár: {finalPackage.price.toLocaleString('hu-HU')} Ft</p>
-            <p className="text-gray-500 mt-4">PDF export hamarosan...</p>
-          </div>
-        </div>
+        <SummaryScreen
+          finalPackage={finalPackage}
+          budget={selectedBudget}
+          onStartOver={handleStartOver}
+        />
       )}
     </div>
   );
