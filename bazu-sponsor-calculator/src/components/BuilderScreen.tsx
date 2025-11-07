@@ -315,7 +315,7 @@ export const BuilderScreen = ({ basePackage, budget, onContinue, onBack }: Build
                     {isOverBudget ? (
                       <>
                         {/* Focus on reach percentage - BIG */}
-                        <div className="text-2xl font-black text-green-400 mb-1">
+                        <div className="text-xl font-black text-green-400 mb-1">
                           {((Math.abs(budgetRemaining) / budget) * 100).toFixed(0)}%-kal nagyobb elérés 📈
                         </div>
                         {/* Investment amount - small */}
