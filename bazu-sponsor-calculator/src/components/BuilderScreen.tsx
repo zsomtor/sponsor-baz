@@ -308,22 +308,24 @@ export const BuilderScreen = ({ basePackage, budget, onContinue, onBack }: Build
                   </div>
 
                   {/* Budget Status - Always Positive Framing */}
-                  <div className={`p-4 rounded-xl ${
-                    isOverBudget
-                      ? 'bg-gradient-to-br from-bazu-orange/20 to-bazu-red/20 border border-bazu-orange/30'
-                      : 'bg-green-500/20 border border-green-500/30'
-                  }`}>
+                  <div className="p-4 rounded-xl bg-green-500/20 border border-green-500/30">
                     <div className="text-sm font-semibold mb-1">
                       {isOverBudget ? '🚀 Maximalizált hatás' : '✅ Költségkeret alatt'}
                     </div>
-                    <div className={`text-lg font-bold ${isOverBudget ? 'gradient-text' : 'text-green-400'}`}>
-                      {isOverBudget
-                        ? `+${formatCurrency(Math.abs(budgetRemaining))} Ft befektetés`
-                        : `+${formatCurrency(Math.abs(budgetRemaining))} Ft tartalék`}
-                    </div>
-                    {isOverBudget && (
-                      <div className="text-xs text-gray-400 mt-1">
-                        {((Math.abs(budgetRemaining) / budget) * 100).toFixed(0)}%-kal nagyobb elérés 📈
+                    {isOverBudget ? (
+                      <>
+                        {/* Focus on reach percentage - BIG */}
+                        <div className="text-2xl font-black text-green-400 mb-1">
+                          {((Math.abs(budgetRemaining) / budget) * 100).toFixed(0)}%-kal nagyobb elérés 📈
+                        </div>
+                        {/* Investment amount - small */}
+                        <div className="text-xs text-gray-400">
+                          +{formatCurrency(Math.abs(budgetRemaining))} Ft befektetés
+                        </div>
+                      </>
+                    ) : (
+                      <div className="text-lg font-bold text-green-400">
+                        +{formatCurrency(Math.abs(budgetRemaining))} Ft tartalék
                       </div>
                     )}
                   </div>
