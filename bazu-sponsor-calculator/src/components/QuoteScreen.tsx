@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import jsPDF from 'jspdf';
 import type { PackageFeature, SponsorshipGoal } from '../types';
@@ -11,6 +12,7 @@ interface QuoteScreenProps {
 }
 
 export const QuoteScreen = ({ selectedFeatures, selectedGoals, onStartOver, onBack }: QuoteScreenProps) => {
+  const [companyName, setCompanyName] = useState('');
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('hu-HU', {
       style: 'decimal',
@@ -48,6 +50,15 @@ export const QuoteScreen = ({ selectedFeatures, selectedGoals, onStartOver, onBa
     doc.setFontSize(10);
     doc.setTextColor(100, 100, 100);
     doc.text('Szponzorsági Ajánlat', margin, yPos + 7);
+
+    // Company name (if provided)
+    if (companyName.trim()) {
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      const companyText = `Készítve: ${companyName}`;
+      const companyWidth = doc.getTextWidth(companyText);
+      doc.text(companyText, pageWidth - margin - companyWidth, yPos);
+    }
 
     yPos += 25;
 
@@ -340,6 +351,26 @@ export const QuoteScreen = ({ selectedFeatures, selectedGoals, onStartOver, onBa
               ))}
             </div>
           </div>
+        </motion.div>
+
+        {/* Company Name Input */}
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.5, duration: 0.6 }}
+          className="glass-effect rounded-3xl p-6 mb-6"
+        >
+          <label htmlFor="company-name" className="block text-sm font-semibold text-gray-400 mb-3">
+            Cég neve (opcionális - megjelenik a PDF-en)
+          </label>
+          <input
+            id="company-name"
+            type="text"
+            value={companyName}
+            onChange={(e) => setCompanyName(e.target.value)}
+            placeholder="pl. Példa Kft."
+            className="w-full px-4 py-3 bg-white/5 border border-white/10 rounded-xl text-white placeholder-gray-500 focus:outline-none focus:border-bazu-orange transition-colors"
+          />
         </motion.div>
 
         {/* Action Buttons */}
