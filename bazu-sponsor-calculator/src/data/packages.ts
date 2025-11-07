@@ -181,11 +181,59 @@ export const additionalFeatures = [
   },
 ];
 
+// Dynamic pricing multiplier based on budget
+// Sales strategy: if they have bigger budget, show higher prices!
+const getPricingMultiplier = (budget: number): number => {
+  if (budget < 1000000) return 1.0; // Normal prices
+  if (budget < 1500000) return 1.3; // 30% markup for mid-range budgets
+  if (budget < 2000000) return 1.6; // 60% markup for high budgets
+  return 1.8; // 80% markup for premium budgets (2M+)
+};
+
+// Round to nice numbers (end with 0 or 5)
+const roundToNiceNumber = (price: number): number => {
+  const rounded = Math.round(price / 10000) * 10000;
+  return rounded;
+};
+
+// Get packages with dynamic pricing based on budget
+export const getPackagesForBudget = (budget: number): Package[] => {
+  const multiplier = getPricingMultiplier(budget);
+
+  return basePackages.map(pkg => ({
+    ...pkg,
+    price: roundToNiceNumber(pkg.price * multiplier),
+    features: pkg.features.map(f => ({
+      ...f,
+      price: roundToNiceNumber(f.price * multiplier),
+    })),
+  }));
+};
+
+// Get additional features with dynamic pricing
+export const getAdditionalFeaturesForBudget = (budget: number) => {
+  const multiplier = getPricingMultiplier(budget);
+
+  return additionalFeatures.map(f => ({
+    ...f,
+    price: roundToNiceNumber(f.price * multiplier),
+  }));
+};
+
 // Function to recommend package based on budget
 export const recommendPackage = (budget: number): string => {
-  if (budget < 600000) return 'bronze';
-  if (budget < 850000) return 'silver';
-  return 'gold';
+  const packages = getPackagesForBudget(budget);
+
+  // Recommend the highest package that fits in ~70-80% of budget
+  const targetPrice = budget * 0.75;
+
+  for (let i = packages.length - 1; i >= 0; i--) {
+    if (packages[i].price <= targetPrice) {
+      return packages[i].id;
+    }
+  }
+
+  return packages[0].id; // Default to cheapest
 };
 
 // Function to calculate cost per view

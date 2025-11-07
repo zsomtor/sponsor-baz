@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { basePackages, calculateCPV, recommendPackage } from '../data/packages';
+import { getPackagesForBudget, calculateCPV, recommendPackage } from '../data/packages';
 import type { Package } from '../types';
 
 interface PackagesScreenProps {
@@ -10,6 +10,7 @@ interface PackagesScreenProps {
 }
 
 export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScreenProps) => {
+  const packages = getPackagesForBudget(budget);
   const recommendedPackageId = recommendPackage(budget);
   const [hoveredPackage, setHoveredPackage] = useState<string | null>(null);
 
@@ -94,7 +95,7 @@ export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScre
 
         {/* Packages Grid */}
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          {basePackages.map((pkg, index) => {
+          {packages.map((pkg, index) => {
             const isRecommended = pkg.id === recommendedPackageId;
             const isHovered = hoveredPackage === pkg.id;
             const cpv = calculateCPV(pkg.price, pkg.totalReach);

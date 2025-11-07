@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import type { Package, PackageFeature } from '../types';
-import { additionalFeatures } from '../data/packages';
+import { getAdditionalFeaturesForBudget } from '../data/packages';
 
 interface BuilderScreenProps {
   basePackage: Package;
@@ -17,12 +17,13 @@ export const BuilderScreen = ({ basePackage, budget, onContinue, onBack }: Build
 
   // Initialize features from base package
   useEffect(() => {
+    const dynamicAdditionalFeatures = getAdditionalFeaturesForBudget(budget);
     const allFeatures = [
       ...basePackage.features.map(f => ({ ...f })),
-      ...additionalFeatures.map(f => ({ ...f })),
+      ...dynamicAdditionalFeatures.map(f => ({ ...f })),
     ];
     setFeatures(allFeatures);
-  }, [basePackage]);
+  }, [basePackage, budget]);
 
   // Calculate totals whenever features change
   useEffect(() => {
