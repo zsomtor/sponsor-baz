@@ -105,61 +105,121 @@ export const GoalsScreen = ({ budget, onContinue, onBack }: GoalsScreenProps) =>
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.4, duration: 0.6 }}
-          className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-8"
+          className="mb-8"
         >
-          {goals.map((goal, index) => {
-            const isSelected = selectedGoals[goal.id];
-            return (
-              <motion.button
-                key={goal.id}
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
-                onClick={() => toggleGoal(goal.id)}
-                whileHover={{ scale: 1.02 }}
-                whileTap={{ scale: 0.98 }}
-                className={`relative text-left p-6 rounded-2xl transition-all duration-300 ${
-                  isSelected
-                    ? 'bg-gradient-to-br from-bazu-orange/20 to-bazu-red/20 border-2 border-bazu-orange'
-                    : 'glass-effect hover:border-white/20'
-                }`}
-              >
-                {/* Checkmark */}
-                <AnimatePresence>
-                  {isSelected && (
-                    <motion.div
-                      initial={{ scale: 0, opacity: 0 }}
-                      animate={{ scale: 1, opacity: 1 }}
-                      exit={{ scale: 0, opacity: 0 }}
-                      transition={{ type: 'spring', stiffness: 500, damping: 30 }}
-                      className="absolute top-4 right-4 w-6 h-6 bg-gradient-to-br from-bazu-orange to-bazu-red rounded-full flex items-center justify-center"
-                    >
-                      <svg
-                        className="w-4 h-4 text-white"
-                        fill="none"
-                        strokeLinecap="round"
-                        strokeLinejoin="round"
-                        strokeWidth="2"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
+          {/* First 3 goals - full grid on desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 mb-4">
+            {goals.slice(0, 3).map((goal, index) => {
+              const isSelected = selectedGoals[goal.id];
+              return (
+                <motion.button
+                  key={goal.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + index * 0.1, duration: 0.5 }}
+                  onClick={() => toggleGoal(goal.id)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`relative text-left p-6 rounded-2xl transition-all duration-300 ${
+                    isSelected
+                      ? 'bg-gradient-to-br from-bazu-orange/20 to-bazu-red/20 border-2 border-bazu-orange'
+                      : 'glass-effect hover:border-white/20'
+                  }`}
+                >
+                  {/* Checkmark */}
+                  <AnimatePresence>
+                    {isSelected && (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                        className="absolute top-4 right-4 w-6 h-6 bg-gradient-to-br from-bazu-orange to-bazu-red rounded-full flex items-center justify-center"
                       >
-                        <path d="M5 13l4 4L19 7"></path>
-                      </svg>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                        <svg
+                          className="w-4 h-4 text-white"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
 
-                {/* Icon */}
-                <div className="text-4xl mb-3">{goal.icon}</div>
+                  {/* Icon */}
+                  <div className="text-4xl mb-3">{goal.icon}</div>
 
-                {/* Content */}
-                <h3 className={`text-lg font-bold mb-2 ${isSelected ? 'gradient-text' : 'text-white'}`}>
-                  {goal.title}
-                </h3>
-                <p className="text-sm text-gray-400 leading-relaxed">{goal.description}</p>
-              </motion.button>
-            );
-          })}
+                  {/* Content */}
+                  <h3 className={`text-lg font-bold mb-2 ${isSelected ? 'gradient-text' : 'text-white'}`}>
+                    {goal.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 leading-relaxed">{goal.description}</p>
+                </motion.button>
+              );
+            })}
+          </div>
+
+          {/* Last 2 goals - centered on desktop */}
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 lg:flex lg:justify-center lg:gap-4">
+            {goals.slice(3).map((goal, index) => {
+              const isSelected = selectedGoals[goal.id];
+              return (
+                <motion.button
+                  key={goal.id}
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 + (index + 3) * 0.1, duration: 0.5 }}
+                  onClick={() => toggleGoal(goal.id)}
+                  whileHover={{ scale: 1.02 }}
+                  whileTap={{ scale: 0.98 }}
+                  className={`relative text-left p-6 rounded-2xl transition-all duration-300 lg:w-[calc(33.333%-0.5rem)] ${
+                    isSelected
+                      ? 'bg-gradient-to-br from-bazu-orange/20 to-bazu-red/20 border-2 border-bazu-orange'
+                      : 'glass-effect hover:border-white/20'
+                  }`}
+                >
+                  {/* Checkmark */}
+                  <AnimatePresence>
+                    {isSelected && (
+                      <motion.div
+                        initial={{ scale: 0, opacity: 0 }}
+                        animate={{ scale: 1, opacity: 1 }}
+                        exit={{ scale: 0, opacity: 0 }}
+                        transition={{ type: 'spring', stiffness: 500, damping: 30 }}
+                        className="absolute top-4 right-4 w-6 h-6 bg-gradient-to-br from-bazu-orange to-bazu-red rounded-full flex items-center justify-center"
+                      >
+                        <svg
+                          className="w-4 h-4 text-white"
+                          fill="none"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          strokeWidth="2"
+                          viewBox="0 0 24 24"
+                          stroke="currentColor"
+                        >
+                          <path d="M5 13l4 4L19 7"></path>
+                        </svg>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+
+                  {/* Icon */}
+                  <div className="text-4xl mb-3">{goal.icon}</div>
+
+                  {/* Content */}
+                  <h3 className={`text-lg font-bold mb-2 ${isSelected ? 'gradient-text' : 'text-white'}`}>
+                    {goal.title}
+                  </h3>
+                  <p className="text-sm text-gray-400 leading-relaxed">{goal.description}</p>
+                </motion.button>
+              );
+            })}
+          </div>
         </motion.div>
 
         {/* Navigation Buttons */}

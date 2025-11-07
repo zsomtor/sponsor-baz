@@ -83,10 +83,10 @@ export const SummaryScreen = ({ finalPackage, budget, selectedGoals, onStartOver
         .map(([key]) => {
           const goalLabels: Record<string, string> = {
             brandAwareness: 'Márkaismertség növelése',
-            engagement: 'Közösség bevonása',
-            leadGeneration: 'Új vásárlók szerzése',
-            productLaunch: 'Termék/szolgáltatás bevezetése',
-            thoughtLeadership: 'Szakértői pozíció építése',
+            leadGeneration: 'Lead generálás',
+            b2bCredibility: 'B2B hitelesség',
+            productLaunch: 'Termék/szolgáltatás bevezetés',
+            longTerm: 'Hosszú távú partnerség',
           };
           return goalLabels[key] || key;
         });
