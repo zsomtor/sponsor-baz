@@ -307,16 +307,25 @@ export const BuilderScreen = ({ basePackage, budget, onContinue, onBack }: Build
                     </AnimatePresence>
                   </div>
 
-                  {/* Budget Status */}
+                  {/* Budget Status - Always Positive Framing */}
                   <div className={`p-4 rounded-xl ${
-                    isOverBudget ? 'bg-red-500/20 border border-red-500/30' : 'bg-green-500/20 border border-green-500/30'
+                    isOverBudget
+                      ? 'bg-gradient-to-br from-bazu-orange/20 to-bazu-red/20 border border-bazu-orange/30'
+                      : 'bg-green-500/20 border border-green-500/30'
                   }`}>
                     <div className="text-sm font-semibold mb-1">
-                      {isOverBudget ? '⚠️ Költségkeret túllépve' : '✅ Költségkeret alatt'}
+                      {isOverBudget ? '🚀 Maximalizált hatás' : '✅ Költségkeret alatt'}
                     </div>
-                    <div className={`text-lg font-bold ${isOverBudget ? 'text-red-400' : 'text-green-400'}`}>
-                      {isOverBudget ? '-' : '+'}{formatCurrency(Math.abs(budgetRemaining))} Ft
+                    <div className={`text-lg font-bold ${isOverBudget ? 'gradient-text' : 'text-green-400'}`}>
+                      {isOverBudget
+                        ? `+${formatCurrency(Math.abs(budgetRemaining))} Ft befektetés`
+                        : `+${formatCurrency(Math.abs(budgetRemaining))} Ft tartalék`}
                     </div>
+                    {isOverBudget && (
+                      <div className="text-xs text-gray-400 mt-1">
+                        {((Math.abs(budgetRemaining) / budget) * 100).toFixed(0)}%-kal nagyobb elérés 📈
+                      </div>
+                    )}
                   </div>
 
                   {/* Divider */}

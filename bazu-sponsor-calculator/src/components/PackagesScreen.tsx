@@ -104,6 +104,12 @@ export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScre
             // Check if this is the next package above budget (show "biztos nem?" indicator)
             const isNextAboveBudget = !isAffordable && index > 0 && packages[index - 1].price <= budget;
 
+            // SALES RULE: Never show "Ajánlott neked" on Bronze (index 0)
+            const showRecommended = isRecommended && index !== 0;
+
+            // SALES RULE: Don't show both badges - recommended takes priority
+            const showNextAboveBudget = isNextAboveBudget && !showRecommended;
+
             return (
               <motion.div
                 key={pkg.id}
@@ -115,7 +121,7 @@ export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScre
                 className="relative"
               >
                 {/* Recommended Badge */}
-                {isRecommended && (
+                {showRecommended && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -128,8 +134,8 @@ export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScre
                   </motion.div>
                 )}
 
-                {/* Next Above Budget Badge - "Biztos nem?" */}
-                {isNextAboveBudget && (
+                {/* Next Above Budget Badge - "Esetleg?" */}
+                {showNextAboveBudget && (
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
@@ -148,14 +154,14 @@ export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScre
                   onClick={() => onSelectPackage(pkg)}
                   disabled={false}
                   className={`w-full text-left p-8 rounded-3xl transition-all duration-300 ${
-                    isRecommended && isAffordable
+                    showRecommended && isAffordable
                       ? 'bg-gradient-to-br from-bazu-orange/20 to-bazu-red/20 border-2 border-bazu-orange'
-                      : isNextAboveBudget
+                      : showNextAboveBudget
                       ? 'bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/50 hover:border-yellow-500'
                       : isAffordable
                       ? 'glass-effect hover:border-white/30'
                       : 'glass-effect opacity-50 cursor-not-allowed'
-                  } ${isHovered && (isAffordable || isNextAboveBudget) ? 'shadow-2xl shadow-bazu-orange/20' : ''}`}
+                  } ${isHovered && (isAffordable || showNextAboveBudget) ? 'shadow-2xl shadow-bazu-orange/20' : ''}`}
                 >
                   {/* Package Header */}
                   <div className="mb-6">
