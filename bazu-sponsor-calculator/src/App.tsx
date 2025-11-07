@@ -8,12 +8,12 @@ import { FeatureSelectionScreen } from './components/FeatureSelectionScreen';
 import { QuoteScreen } from './components/QuoteScreen';
 import type { SponsorshipGoal, Package, PackageFeature } from './types';
 
-type Step = 'welcome' | 'goals' | 'packages' | 'builder' | 'summary' | 'feature-selection' | 'quote';
+type Step = 'welcome' | 'goals' | 'packages' | 'builder' | 'summary' | 'feature-selection' | 'goals-custom' | 'quote';
 
 function App() {
   const [currentStep, setCurrentStep] = useState<Step>('welcome');
   const [selectedBudget, setSelectedBudget] = useState(0);
-  const [, setSelectedGoals] = useState<SponsorshipGoal | null>(null);
+  const [selectedGoals, setSelectedGoals] = useState<SponsorshipGoal | null>(null);
   const [selectedPackage, setSelectedPackage] = useState<Package | null>(null);
   const [finalPackage, setFinalPackage] = useState<Package | null>(null);
   const [customSelectedFeatures, setCustomSelectedFeatures] = useState<PackageFeature[]>([]);
@@ -54,11 +54,20 @@ function App() {
 
   const handleFeaturesSelected = (features: PackageFeature[]) => {
     setCustomSelectedFeatures(features);
-    setCurrentStep('quote');
+    setCurrentStep('goals-custom'); // Go to goals after feature selection
+  };
+
+  const handleGoalsSelectedCustom = (goals: SponsorshipGoal) => {
+    setSelectedGoals(goals);
+    setCurrentStep('quote'); // Go to quote after goals
   };
 
   const handleBackToFeatureSelection = () => {
     setCurrentStep('feature-selection');
+  };
+
+  const handleBackToGoalsCustom = () => {
+    setCurrentStep('goals-custom');
   };
 
   return (
@@ -99,6 +108,7 @@ function App() {
         <SummaryScreen
           finalPackage={finalPackage}
           budget={selectedBudget}
+          selectedGoals={selectedGoals}
           onStartOver={handleStartOver}
         />
       )}
@@ -110,11 +120,20 @@ function App() {
         />
       )}
 
+      {currentStep === 'goals-custom' && (
+        <GoalsScreen
+          budget={0}
+          onContinue={handleGoalsSelectedCustom}
+          onBack={handleBackToFeatureSelection}
+        />
+      )}
+
       {currentStep === 'quote' && customSelectedFeatures.length > 0 && (
         <QuoteScreen
           selectedFeatures={customSelectedFeatures}
+          selectedGoals={selectedGoals}
           onStartOver={handleStartOver}
-          onBack={handleBackToFeatureSelection}
+          onBack={handleBackToGoalsCustom}
         />
       )}
     </div>

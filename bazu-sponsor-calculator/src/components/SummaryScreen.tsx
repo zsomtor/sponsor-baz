@@ -1,15 +1,16 @@
 import { motion } from 'framer-motion';
 import jsPDF from 'jspdf';
-import type { Package } from '../types';
+import type { Package, SponsorshipGoal } from '../types';
 import { calculateCPV } from '../data/packages';
 
 interface SummaryScreenProps {
   finalPackage: Package;
   budget: number;
+  selectedGoals: SponsorshipGoal | null;
   onStartOver: () => void;
 }
 
-export const SummaryScreen = ({ finalPackage, budget, onStartOver }: SummaryScreenProps) => {
+export const SummaryScreen = ({ finalPackage, budget, selectedGoals, onStartOver }: SummaryScreenProps) => {
   const formatCurrency = (value: number) => {
     return new Intl.NumberFormat('hu-HU', {
       style: 'decimal',
@@ -66,7 +67,41 @@ export const SummaryScreen = ({ finalPackage, budget, onStartOver }: SummaryScre
     doc.setTextColor(100, 100, 100);
     doc.text(`Teljes elérés: ${formatReach(finalPackage.totalReach)} | CPV: ${cpv.toFixed(2)} Ft`, margin, yPos);
 
-    yPos += 20;
+    yPos += 15;
+
+    // Goals section (if selected)
+    if (selectedGoals) {
+      doc.setFontSize(12);
+      doc.setTextColor(0, 0, 0);
+      doc.text('Marketing célok:', margin, yPos);
+      yPos += 8;
+
+      doc.setFontSize(9);
+      doc.setTextColor(80, 80, 80);
+      const goalsList = Object.entries(selectedGoals)
+        .filter(([, value]) => value === true)
+        .map(([key]) => {
+          const goalLabels: Record<string, string> = {
+            brandAwareness: 'Márkaismertség növelése',
+            engagement: 'Közösség bevonása',
+            leadGeneration: 'Új vásárlók szerzése',
+            productLaunch: 'Termék/szolgáltatás bevezetése',
+            thoughtLeadership: 'Szakértői pozíció építése',
+          };
+          return goalLabels[key] || key;
+        });
+
+      goalsList.forEach((goal) => {
+        doc.setDrawColor(255, 107, 53);
+        doc.circle(margin + 1.5, yPos - 1.5, 1.5);
+        doc.setFillColor(255, 107, 53);
+        doc.circle(margin + 1.5, yPos - 1.5, 0.8, 'F');
+        doc.text(goal, margin + 6, yPos);
+        yPos += 5;
+      });
+
+      yPos += 10;
+    }
 
     // Features section
     doc.setFontSize(14);

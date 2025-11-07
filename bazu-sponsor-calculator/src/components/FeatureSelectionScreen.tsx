@@ -1,7 +1,6 @@
 import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import type { PackageFeature } from '../types';
-import { basePackages, additionalFeatures } from '../data/packages';
 
 interface FeatureSelectionScreenProps {
   onContinue: (selectedFeatures: PackageFeature[]) => void;
@@ -12,25 +11,114 @@ export const FeatureSelectionScreen = ({ onContinue, onBack }: FeatureSelectionS
   const [features, setFeatures] = useState<PackageFeature[]>([]);
   const [selectedCount, setSelectedCount] = useState(0);
 
-  // Initialize all features (base + additional) at base prices
+  // Initialize curated feature list for custom packages
   useEffect(() => {
-    // Get all features from all base packages
-    const allBaseFeatures = basePackages.flatMap(pkg =>
-      pkg.features.map(f => ({ ...f, included: false }))
-    );
-
-    // Remove duplicates by id (in case same feature appears in multiple packages)
-    const uniqueBaseFeatures = Array.from(
-      new Map(allBaseFeatures.map(f => [f.id, f])).values()
-    );
-
-    // Combine with additional features
-    const allFeatures = [
-      ...uniqueBaseFeatures,
-      ...additionalFeatures.map(f => ({ ...f, included: false })),
+    // Curated list of features (no duplicates)
+    const curatedFeatures: PackageFeature[] = [
+      // Podcast szolgáltatások
+      {
+        id: 'podcast-2x',
+        name: '2x Podcast megjelenés',
+        description: '2 epizódban való megjelenés havonta',
+        price: 250000,
+        reach: 100000, // 50k per episode
+        included: false,
+      },
+      {
+        id: 'podcast-4x',
+        name: '4x Podcast megjelenés',
+        description: 'Jelenlét minden havi epizódban',
+        price: 450000,
+        reach: 200000, // 50k per episode
+        included: false,
+      },
+      {
+        id: 'sponsor-slot',
+        name: '30-60 másodperc szponzor szegmens',
+        description: 'Dedikált szponzori üzenet az epizódban',
+        price: 150000,
+        included: false,
+      },
+      {
+        id: 'endroll-slot',
+        name: 'End-Roll szponzor szegmens',
+        description: 'Külön szponzori említés az epizód végén',
+        price: 120000,
+        included: false,
+      },
+      {
+        id: 'description-link',
+        name: 'Link a leírásban',
+        description: 'Kattintható link minden epizód leírásában',
+        price: 70000,
+        included: false,
+      },
+      // Social Media
+      {
+        id: 'instagram-story',
+        name: 'Havi Instagram Story',
+        description: 'Dedikált story havonta a főoldalon',
+        price: 150000,
+        reach: 100000,
+        included: false,
+      },
+      {
+        id: 'tiktok-integration',
+        name: 'TikTok integrálás',
+        description: 'Dedikált TikTok tartalom a márkáddal',
+        price: 250000,
+        reach: 300000,
+        included: false,
+      },
+      {
+        id: 'youtube-mention',
+        name: 'YouTube említés',
+        description: 'Külön említés YouTube videókban',
+        price: 180000,
+        reach: 50000,
+        included: false,
+      },
+      {
+        id: 'instagram-post',
+        name: 'Instagram poszt',
+        description: 'Dedikált Instagram poszt havonta',
+        price: 120000,
+        reach: 80000,
+        included: false,
+      },
+      {
+        id: 'facebook-post',
+        name: 'Facebook poszt',
+        description: 'Dedikált Facebook poszt havonta',
+        price: 100000,
+        reach: 60000,
+        included: false,
+      },
+      // További szolgáltatások
+      {
+        id: 'newsletter-feature',
+        name: 'Hírlevél megjelenés',
+        description: 'Kiemelés a hírlevélben',
+        price: 80000,
+        included: false,
+      },
+      {
+        id: 'exclusivity',
+        name: 'Kategória exkluzivitás',
+        description: 'Egyedüli szponzor a kategóriádban',
+        price: 80000,
+        included: false,
+      },
+      {
+        id: 'event-presence',
+        name: 'Esemény szponzorálása',
+        description: 'Jelenlét Bazu live eseményeken',
+        price: 300000,
+        included: false,
+      },
     ];
 
-    setFeatures(allFeatures);
+    setFeatures(curatedFeatures);
   }, []);
 
   // Update selected count whenever features change
@@ -63,14 +151,18 @@ export const FeatureSelectionScreen = ({ onContinue, onBack }: FeatureSelectionS
 
   // Separate features into categories for better UX
   const podcastFeatures = features.filter(f =>
-    f.id.includes('podcast') || f.id.includes('sponsor-slot') || f.id.includes('endroll')
+    f.id === 'podcast-2x' || f.id === 'podcast-4x' ||
+    f.id === 'sponsor-slot' || f.id === 'endroll-slot' ||
+    f.id === 'description-link'
   );
   const socialMediaFeatures = features.filter(f =>
-    f.id.includes('instagram') || f.id.includes('tiktok') || f.id.includes('youtube')
+    f.id === 'instagram-story' || f.id === 'tiktok-integration' ||
+    f.id === 'youtube-mention' || f.id === 'instagram-post' ||
+    f.id === 'facebook-post'
   );
   const otherFeatures = features.filter(f =>
-    !podcastFeatures.some(pf => pf.id === f.id) &&
-    !socialMediaFeatures.some(sf => sf.id === f.id)
+    f.id === 'newsletter-feature' || f.id === 'exclusivity' ||
+    f.id === 'event-presence'
   );
 
   return (
