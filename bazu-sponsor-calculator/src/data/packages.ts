@@ -233,7 +233,8 @@ export const recommendPackage = (budget: number): string => {
     }
   }
 
-  return packages[0].id; // Default to cheapest
+  // NEVER recommend Bronze (packages[0]) - always start with Silver (packages[1])
+  return packages[1].id; // Default to Silver
 };
 
 // Function to calculate cost per view

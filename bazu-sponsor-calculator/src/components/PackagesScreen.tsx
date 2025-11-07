@@ -101,6 +101,9 @@ export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScre
             const cpv = calculateCPV(pkg.price, pkg.totalReach);
             const isAffordable = pkg.price <= budget;
 
+            // Check if this is the next package above budget (show "biztos nem?" indicator)
+            const isNextAboveBudget = !isAffordable && index > 0 && packages[index - 1].price <= budget;
+
             return (
               <motion.div
                 key={pkg.id}
@@ -125,18 +128,34 @@ export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScre
                   </motion.div>
                 )}
 
+                {/* Next Above Budget Badge - "Biztos nem?" */}
+                {isNextAboveBudget && (
+                  <motion.div
+                    initial={{ opacity: 0, y: -10 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: 0.8, duration: 0.5 }}
+                    className="absolute -top-4 left-1/2 -translate-x-1/2 z-10"
+                  >
+                    <div className="bg-gradient-to-r from-yellow-500 to-orange-500 px-4 py-2 rounded-full text-sm font-bold text-white shadow-lg">
+                      🤔 Esetleg?
+                    </div>
+                  </motion.div>
+                )}
+
                 <motion.button
-                  whileHover={{ scale: isAffordable ? 1.03 : 1 }}
-                  whileTap={{ scale: isAffordable ? 0.98 : 1 }}
-                  onClick={() => isAffordable && onSelectPackage(pkg)}
-                  disabled={!isAffordable}
+                  whileHover={{ scale: 1.03 }}
+                  whileTap={{ scale: 0.98 }}
+                  onClick={() => onSelectPackage(pkg)}
+                  disabled={false}
                   className={`w-full text-left p-8 rounded-3xl transition-all duration-300 ${
                     isRecommended && isAffordable
                       ? 'bg-gradient-to-br from-bazu-orange/20 to-bazu-red/20 border-2 border-bazu-orange'
+                      : isNextAboveBudget
+                      ? 'bg-gradient-to-br from-yellow-500/10 to-orange-500/10 border-2 border-yellow-500/50 hover:border-yellow-500'
                       : isAffordable
                       ? 'glass-effect hover:border-white/30'
                       : 'glass-effect opacity-50 cursor-not-allowed'
-                  } ${isHovered && isAffordable ? 'shadow-2xl shadow-bazu-orange/20' : ''}`}
+                  } ${isHovered && (isAffordable || isNextAboveBudget) ? 'shadow-2xl shadow-bazu-orange/20' : ''}`}
                 >
                   {/* Package Header */}
                   <div className="mb-6">
@@ -200,41 +219,21 @@ export const PackagesScreen = ({ budget, onSelectPackage, onBack }: PackagesScre
                   <div className={`text-center py-3 rounded-xl font-bold transition-all ${
                     isAffordable
                       ? 'bg-white/5 hover:bg-white/10 text-white'
+                      : isNextAboveBudget
+                      ? 'bg-yellow-500/10 hover:bg-yellow-500/20 text-yellow-400'
                       : 'bg-white/5 text-gray-600'
                   }`}>
-                    {isAffordable ? 'Csomag kiválasztása →' : 'Költségkeret alatt'}
+                    {isAffordable
+                      ? 'Csomag kiválasztása →'
+                      : isNextAboveBudget
+                      ? 'Mégis ezt válaszom 💪'
+                      : 'Költségkeret alatt'}
                   </div>
                 </motion.button>
               </motion.div>
             );
           })}
         </div>
-
-        {/* Custom Package Option */}
-        <motion.div
-          initial={{ opacity: 0, y: 20 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ delay: 1, duration: 0.6 }}
-          className="text-center"
-        >
-          <button
-            onClick={() => {
-              const customPackage: Package = {
-                id: 'custom',
-                name: 'Egyedi csomag',
-                price: budget,
-                description: 'Állítsd össze a saját csomagod',
-                features: [],
-                totalReach: 0,
-              };
-              onSelectPackage(customPackage);
-            }}
-            className="glass-effect px-8 py-4 rounded-2xl font-bold text-white hover:border-white/30 transition-all inline-flex items-center gap-2"
-          >
-            <span>✨</span>
-            <span>Egyedi csomag összeállítása</span>
-          </button>
-        </motion.div>
       </motion.div>
     </div>
   );

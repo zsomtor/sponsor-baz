@@ -8,7 +8,7 @@ interface WelcomeScreenProps {
 
 export const WelcomeScreen = ({ onContinue, onSkipToBuilder }: WelcomeScreenProps) => {
   const [budget, setBudget] = useState(800000);
-  const minBudget = 200000;
+  const minBudget = 400000;
   const maxBudget = 2000000;
 
   const formatCurrency = (value: number) => {
@@ -154,18 +154,17 @@ export const WelcomeScreen = ({ onContinue, onSkipToBuilder }: WelcomeScreenProp
           Tovább a célok kiválasztásához
         </motion.button>
 
-        {/* Skip to Custom Builder Button */}
+        {/* Secret Button - Bottom Left Empty Square */}
         <motion.button
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.9, duration: 0.8 }}
-          whileHover={{ scale: 1.02 }}
-          whileTap={{ scale: 0.98 }}
+          whileHover={{ scale: 1.1 }}
+          whileTap={{ scale: 0.95 }}
           onClick={onSkipToBuilder}
-          className="w-full mt-4 py-3 px-6 glass-effect rounded-2xl font-semibold text-sm text-gray-400 hover:text-white hover:border-white/30 transition-all duration-300"
-        >
-          ✨ Saját csomag összeállítása
-        </motion.button>
+          className="fixed bottom-8 left-8 w-6 h-6 glass-effect rounded-lg hover:border-white/30 transition-all duration-300"
+          aria-label="Egyedi csomag összeállítása"
+        />
       </motion.div>
     </div>
   );
