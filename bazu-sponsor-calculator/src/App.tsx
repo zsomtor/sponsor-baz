@@ -20,6 +20,25 @@ function App() {
     setCurrentStep('goals');
   };
 
+  const handleSkipToBuilder = () => {
+    // Skip to builder with base pricing (500K budget = 1.0 multiplier)
+    const baseBudget = 500000;
+    setSelectedBudget(baseBudget);
+
+    // Create a minimal custom package at base prices
+    const customPackage: Package = {
+      id: 'custom',
+      name: 'Egyedi csomag',
+      price: 0,
+      description: 'Saját összeállítású csomag alap árakon',
+      features: [],
+      totalReach: 0,
+    };
+
+    setSelectedPackage(customPackage);
+    setCurrentStep('builder');
+  };
+
   const handleGoalsSelected = (goals: SponsorshipGoal) => {
     setSelectedGoals(goals);
     setCurrentStep('packages');
@@ -46,7 +65,10 @@ function App() {
   return (
     <div className="min-h-screen bg-bazu-dark">
       {currentStep === 'welcome' && (
-        <WelcomeScreen onContinue={handleBudgetSelected} />
+        <WelcomeScreen
+          onContinue={handleBudgetSelected}
+          onSkipToBuilder={handleSkipToBuilder}
+        />
       )}
 
       {currentStep === 'goals' && (

@@ -3,9 +3,10 @@ import { motion } from 'framer-motion';
 
 interface WelcomeScreenProps {
   onContinue: (budget: number) => void;
+  onSkipToBuilder: () => void;
 }
 
-export const WelcomeScreen = ({ onContinue }: WelcomeScreenProps) => {
+export const WelcomeScreen = ({ onContinue, onSkipToBuilder }: WelcomeScreenProps) => {
   const [budget, setBudget] = useState(800000);
   const minBudget = 200000;
   const maxBudget = 2000000;
@@ -56,7 +57,7 @@ export const WelcomeScreen = ({ onContinue }: WelcomeScreenProps) => {
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2, duration: 0.8 }}
-            className="text-6xl md:text-8xl font-black mb-6 leading-tight"
+            className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-black mb-4 md:mb-6 leading-tight"
           >
             Építsd meg a{' '}
             <span className="gradient-text">Bazu</span>
@@ -67,7 +68,7 @@ export const WelcomeScreen = ({ onContinue }: WelcomeScreenProps) => {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             transition={{ delay: 0.4, duration: 0.8 }}
-            className="text-xl md:text-2xl text-gray-400 font-light"
+            className="text-base sm:text-lg md:text-xl lg:text-2xl text-gray-400 font-light"
           >
             Prémium szponzorációs csomagok Magyarország vezető média platformján
           </motion.p>
@@ -78,9 +79,9 @@ export const WelcomeScreen = ({ onContinue }: WelcomeScreenProps) => {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.8 }}
-          className="glass-effect rounded-3xl p-12 mb-8"
+          className="glass-effect rounded-3xl p-6 sm:p-8 md:p-12 mb-6 md:mb-8"
         >
-          <div className="mb-12">
+          <div className="mb-8 md:mb-12">
             <label className="block text-sm font-semibold text-gray-400 uppercase tracking-wider mb-6">
               Havi költségkeret
             </label>
@@ -91,12 +92,12 @@ export const WelcomeScreen = ({ onContinue }: WelcomeScreenProps) => {
               initial={{ scale: 1.05 }}
               animate={{ scale: 1 }}
               transition={{ duration: 0.2 }}
-              className="mb-12"
+              className="mb-8 md:mb-12"
             >
-              <div className="text-7xl md:text-8xl font-black gradient-text mb-2">
+              <div className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-black gradient-text mb-2">
                 {formatCurrency(budget)}
               </div>
-              <div className="text-3xl font-bold text-gray-500">HUF / hónap</div>
+              <div className="text-xl sm:text-2xl md:text-3xl font-bold text-gray-500">HUF / hónap</div>
             </motion.div>
 
             {/* Custom Slider */}
@@ -148,9 +149,22 @@ export const WelcomeScreen = ({ onContinue }: WelcomeScreenProps) => {
           whileHover={{ scale: 1.02 }}
           whileTap={{ scale: 0.98 }}
           onClick={() => onContinue(budget)}
-          className="w-full py-6 px-12 bg-gradient-to-r from-bazu-orange to-bazu-red rounded-2xl font-bold text-xl text-white shadow-2xl shadow-bazu-orange/30 hover:shadow-bazu-orange/50 transition-shadow duration-300"
+          className="w-full py-4 sm:py-5 md:py-6 px-6 sm:px-8 md:px-12 bg-gradient-to-r from-bazu-orange to-bazu-red rounded-2xl font-bold text-lg sm:text-xl text-white shadow-2xl shadow-bazu-orange/30 hover:shadow-bazu-orange/50 transition-shadow duration-300"
         >
           Tovább a célok kiválasztásához
+        </motion.button>
+
+        {/* Skip to Custom Builder Button */}
+        <motion.button
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          transition={{ delay: 0.9, duration: 0.8 }}
+          whileHover={{ scale: 1.02 }}
+          whileTap={{ scale: 0.98 }}
+          onClick={onSkipToBuilder}
+          className="w-full mt-4 py-3 px-6 glass-effect rounded-2xl font-semibold text-sm text-gray-400 hover:text-white hover:border-white/30 transition-all duration-300"
+        >
+          ✨ Saját csomag összeállítása (alap árakkal)
         </motion.button>
       </motion.div>
     </div>
